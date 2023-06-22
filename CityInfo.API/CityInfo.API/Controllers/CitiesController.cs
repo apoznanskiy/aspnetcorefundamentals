@@ -9,7 +9,8 @@ namespace CityInfo.API.Controllers;
 
 [ApiController]
 [Authorize]
-[Route("api/cities")]
+[Route("api/v{version:apiVersion}/cities")]
+[ApiVersion("1.0")]
 public class CitiesController : ControllerBase
 {
     private const int MAX_CITIES_PAGE_SIZE = 20;
@@ -25,6 +26,17 @@ public class CitiesController : ControllerBase
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
+    /// <summary>
+    /// Get cities from database
+    /// </summary>
+    /// <param name="name">City name</param>
+    /// <param name="searchQuery">Search text</param>
+    /// <param name="pageNumber">Page number</param>
+    /// <param name="pageSize">Page size</param>
+    /// <returns></returns>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities(
         string? name,
